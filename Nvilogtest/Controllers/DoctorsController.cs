@@ -13,12 +13,12 @@ namespace Nvilogtest.Controllers
         {
             // טוען את רשימת הרופאים מהקובץ
             var doctors = LoadDoctors()
-           .OrderByDescending(d =>
-               (double.Parse($"{(d.Reviews?.AverageRating ?? 0)}{(d.Reviews?.TotalRatings ?? 0)}") - (d.PromotionLevel))
-           )
-           .ToList();
+             .OrderByDescending(d => d.Reviews?.AverageRating ?? 0)  // קודם כל לפי דירוג
+             .ThenByDescending(d => d.Reviews?.TotalRatings ?? 0)     // אחר כך לפי כמות מדרגים
+             .ThenBy(d => d.PromotionLevel)                           // אחר כך לפי רמת קידום (נמוך יותר קודם)
+             .ToList();
 
-                return View(doctors);
+            return View(doctors);
         }
         private Dictionary<string, string> LoadLanguages()
         {
